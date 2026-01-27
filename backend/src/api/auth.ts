@@ -1,6 +1,7 @@
 import express from "express";
 import { hashPass } from "../utils/hashPass";
 import { Pool } from "pg";
+import { pool } from "../db";
 
 const router = express.Router();
 

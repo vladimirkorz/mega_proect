@@ -1,0 +1,110 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+	line-height: 1.6;
+	color: #333;
+	background-color: #f5f5f5;
+	padding: 5px;
+	padding-top: 100px;
+}
+
+.StatusBar {
+	max-height: 30px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.StatusBar > div {
+	width: 70px;
+}
+
+.StatusBar > div > img {
+	max-width: 20px;
+	max-height: 20px;
+	padding-left: 5px;
+}
+
+.navigationBar {
+	display: flex;
+	justify-content: space-between;
+}
+
+.Search {
+	width: 100%;
+	height: 39px;
+	background-color: bisque;
+	border-radius: 20px;
+}
+
+.PromotionalBanner {
+	width: 350px;
+	height: 140px;
+	background-color: #333;
+	color: black;
+	border-radius: 20px;
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 10px;
+}
+
+.CategoryCards {
+	display: flex;
+	overflow-x: min;
+	height: 100px;
+	background-color: rgb(187, 187, 187);
+}
+
+.Card {
+	max-height: 80px;
+	min-width: 66px;
+	background-color: #7c7c7c;
+	margin-right: 5px;
+	font-size: 11px;
+}
+
+.Card > img {
+	min-width: 66px;
+	min-height: 66px;
+	background-color: #333;
+	max-width: 66px;
+	max-height: 66px;
+}
+
+.Goods {
+	display: grid;
+	gap: 10px;
+	grid-template-columns: 169px 169px;
+}
+
+.Goods > div {
+	width: 169px;
+	height: 292px;
+	background-color: rgb(204, 204, 204);
+	border-radius: 20px;
+}
+
+.Goods > div > img {
+	max-width: 184px;
+	max-height: 184px;
+	border-radius: 20px;
+}
+
+.Goods > div > button {
+	width: 160px;
+	margin-left: 5px;
+}
+
+.Baza {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	max-width: 350px;
+	background-color: #f5f5f5;
+}

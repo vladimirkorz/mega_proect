@@ -9,6 +9,23 @@ import "./App.css";
 
 function App() {
 	// нужно пользоваться useState и useEffect
+
+	// const button = document.getElementById("menuButton");
+	// const menu = document.getElementById("dropdownContent");
+
+	// button.addEventListener("click", function () {
+	// 	menu.classList.toggle("show"); // Переключает класс show
+	// });
+
+	// // Закрыть меню при клике вне его
+	// window.onclick = function (event) {
+	// 	if (!event.target.matches("#menuButton")) {
+	// 		if (menu.classList.contains("show")) {
+	// 			menu.classList.remove("show");
+	// 		}
+	// 	}
+	// };
+
 	return (
 		<>
 			<div className="Baza">

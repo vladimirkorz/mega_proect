@@ -38,6 +38,7 @@ h1 {
 
 button {
 	height: 30px;
+	width: 100%;
 	border-radius: 20px;
 	border: 1px solid transparent;
 	padding-left: 8px;
@@ -50,8 +51,8 @@ button {
 	margin-top: 10px;
 }
 button:hover {
-	border-color: #646cff;
-	background-color: antiquewhite;
+	border-color: #adadad;
+	background-color: rgb(199, 199, 199);
 }
 button:focus,
 button:focus-visible {

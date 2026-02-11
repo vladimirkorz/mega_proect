@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Добавляем импорт
 import "../App.css";
 
-export default function Login() {
+export default function Registration() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate(); // Хук для возврата
@@ -19,9 +19,13 @@ export default function Login() {
 			className="login-container"
 			style={{ padding: "50px", maxWidth: "400px", margin: "0 auto" }}
 		>
-			<h2>Вход в аккаунт</h2>
+			<h2>Создание  аккаунта</h2>
 			<form onSubmit={handleSubmit}>
-
+								<input
+					className="login-input"
+					placeholder="Имя"
+					type="text"
+				/>
 				<input
 					className="login-input"
 					placeholder="Почта"
@@ -32,14 +36,14 @@ export default function Login() {
 					placeholder="Пароль"
 					type="text"
 				/>
-				<button type="submit">Войти</button>
+				<button type="submit">Создать</button>
 			</form>
 
 			{/* Кнопка возврата на главную */}
 			<button type="button" onClick={() => navigate("/")}>
 				← Вернуться на главную
 			</button>
-			<p>нет аккаунта?</p><a href="/Registration">зарегистрироваться</a>
+			<p>Есть аккаунт?</p><a href="/Login">Войти</a>
 		</div>
 	);
 }

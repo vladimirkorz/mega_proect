@@ -1,6 +1,8 @@
 // src/components/NavigationBar.jsx
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; // Импортируем хук
+import { useCart } from "../context/CartContext.jsx";
 
 function NavigationBar() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -11,10 +13,18 @@ function NavigationBar() {
 		setIsOpen(false);
 		navigate("/login");
 	};
+	const { cartCount } = useCart();
 
 	return (
 		<div className="navigationBar">
-			<button>корзина</button>
+			<button>
+				<Link to="/cart" className="cart-link">
+					🛒 Корзина
+					{cartCount > 0 && (
+						<span className="cart-badge">{cartCount}</span>
+					)}
+				</Link>
+			</button>
 			<button>наш телеграм</button>
 			<div className="dropdown">
 				<button id="menuButton" onClick={() => setIsOpen(!isOpen)}>

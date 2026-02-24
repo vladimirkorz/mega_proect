@@ -15,12 +15,13 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  username String   @unique
-  email    String   @unique
-  password String
-  createAt DateTime @default(now())
-  posts    Post[]
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now()) // Было createAt
+  posts     Post[]
+  cartItems CartItem[]
 }
 
 model Post {
@@ -32,4 +33,17 @@ model Post {
   authorId Int
   // Описание связи: поле authorId ссылается на id в модели User
   author   User @relation(fields: [authorId], references: [id])
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  productId Int
+  name      String // Название товара
+  price     Float // Цена
+  quantity  Int     @default(1)
+  image     String? // URL изображения (опционально)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId]) // Один товар может быть в корзине пользователя только один раз
 }

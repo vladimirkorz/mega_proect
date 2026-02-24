@@ -1,6 +1,6 @@
-import ProductCard from "./ProductCard.jsx"; // 👈 Импортируем карточку из соседнего файла
+import ProductCard from "./ProductCard.jsx";
 
-export default function Goods({ onAddToCart }) {
+export default function Goods() {
 	const products = [
 		{
 			id: 1,
@@ -18,7 +18,7 @@ export default function Goods({ onAddToCart }) {
 				<ProductCard
 					key={product.id}
 					product={product}
-					onAddToCart={onAddToCart}
+					// onAddToCart больше не нужен!
 				/>
 			))}
 		</section>

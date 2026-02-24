@@ -3,13 +3,15 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path"; // 1. Импортируем path
 import authRouter from "./api/auth";
+import cartRoutes from "./api/cart";
 
 // 2. Явно указываем путь к .env (выходим из src в корень)
-dotenv.config({ path: path.resolve(__dirname, "../.env") }); 
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use("/api/cart", cartRoutes);
 app.use(cors());
 app.use(express.json());
 
@@ -19,5 +21,5 @@ app.use("/api/auth", authRouter);
 console.log("DATABASE_URL загружена:", !!process.env.DATABASE_URL);
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+	console.log(`Server running on http://localhost:${PORT}`);
 });

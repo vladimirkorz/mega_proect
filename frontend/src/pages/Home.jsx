@@ -1,20 +1,21 @@
-// src/pages/Home.jsx
 import { useState, useEffect } from "react";
+import { useCart } from "../context/CartContext.jsx";
+
+// Импорт компонентов
+import StatusBar from "../components/StatusBar.jsx";
+import NavigationBar from "../components/NavigationBar.jsx";
 import Search from "../components/Search.jsx";
 import PromotionalBanner from "../components/PromotionalBanner.jsx";
-import NavigationBar from "../components/NavigationBar.jsx";
 import CategoryCards from "../components/CategoryCards.jsx";
-import Goods from "../components/Goods.jsx";
-import StatusBar from "../components/StatusBar.jsx";
-import "../App.css"; // Или отдельный CSS для страницы
+import Goods from "../components/Goods/Goods.jsx"; // 👈 Обрати на путь
 
 export default function Home() {
-	// Пример использования useState/useEffect (как в вашем комментарии)
+	const { addToCart } = useCart(); // 👈 Хук работает, т.к. App обернут в CartProvider
 	const [isReady, setIsReady] = useState(false);
 
 	useEffect(() => {
+		// Здесь можно загрузить товары с бэкенда
 		setIsReady(true);
-		// Здесь можно добавить логику загрузки данных и т.д.
 	}, []);
 
 	if (!isReady) return <div>Загрузка...</div>;
@@ -29,7 +30,8 @@ export default function Home() {
 			<div className="App">
 				<PromotionalBanner />
 				<CategoryCards />
-				<Goods />
+				{/* 👇 Передаём функцию добавления в Goods */}
+				<Goods onAddToCart={addToCart} />
 			</div>
 		</>
 	);

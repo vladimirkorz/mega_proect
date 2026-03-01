@@ -139,7 +139,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Student\\Рабочий стол\\КГБ\\mega_proect\\backend\\src\\generated\\prisma",
+      "value": "C:\\Users\\vladi\\Desktop\\proga\\КОЛЛЕДЖ\\mega_proect\\backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -153,7 +153,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Student\\Рабочий стол\\КГБ\\mega_proect\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\vladi\\Desktop\\proga\\КОЛЛЕДЖ\\mega_proect\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

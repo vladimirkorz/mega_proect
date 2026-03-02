@@ -5,11 +5,9 @@ import { CartProvider } from "./context/CartContext.jsx"; // Импортиру�
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Registration from "./pages/Registration.jsx";
-<<<<<<< HEAD
-=======
+
 import Cart from "./pages/Cart.jsx"; // 👈 Импортируем новую страницу
 
->>>>>>> origin/feature-my-code
 import "./App.css";
 
 function App() {

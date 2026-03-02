@@ -1,0 +1,52 @@
+# Логи
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Зависимости
+node_modules
+.pnp
+.pnp.js
+
+# Тестирование
+coverage
+*.lcov
+
+# Продакшн сборка
+dist
+dist-ssr
+*.local
+
+# Переменные окружения
+# (Файлы .env могут содержать секреты, но .env.example лучше закоммитить)
+.env
+.env.local
+.env.*.local
+# !.env.example  <- Раскомментируй, если используешь шаблонный файл
+
+# Редакторы и IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Кэш Vite
+.vite
+
+# TypeScript (если используется инкрементальная сборка)
+tsconfig.tsbuildinfo
+
+# Pnpm (если используешь этот менеджер пакетов)
+.pnpm-store
+
+# Прочее
+*.tgz

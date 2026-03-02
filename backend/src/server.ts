@@ -1,24 +1,31 @@
-import express, { type Request, type Response } from "express";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+<<<<<<< HEAD
 dotenv.config();
 // import { pool } from "./db";
 
+=======
+import path from "path"; // 1. Импортируем path
+>>>>>>> origin/feature-my-code
 import authRouter from "./api/auth";
+import cartRoutes from "./api/cart";
+
+// 2. Явно указываем путь к .env (выходим из src в корень)
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
+app.use("/api/cart", cartRoutes);
+app.use(cors());
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use("/api/auth", authRouter);
 
-app.get("/", (req, res) => {
-  res.status(200).json({ status: "ok!!!!!!" });
-});
-
-const PORT = 3000;
+// 3. Добавим лог для проверки, загрузились ли переменные
+console.log("DATABASE_URL загружена:", !!process.env.DATABASE_URL);
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+	console.log(`Server running on http://localhost:${PORT}`);
 });

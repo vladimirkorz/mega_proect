@@ -32,6 +32,12 @@ export default function Registration() {
     setError("");
     setIsLoading(true);
 
+<<<<<<< HEAD
+=======
+  console.log("Попытка отправки на:", api.defaults.baseURL + "/auth/register");
+  console.log("Данные:", formData);
+
+>>>>>>> origin/feature-my-code
     try {
       // 3. Отправка запроса на ваш сервер
       const response = await api.post("/auth/register", formData);

@@ -1,15 +1,14 @@
 // backend/src/api/cart.ts
-import { Router, Request, Response } from "express";
-import { PrismaClient } from "../generated/prisma";
-import { requireAuth } from "../utils/auth"; // Ваш middleware авторизации
+import { Router, Response, NextFunction } from "express";
+import prisma from "../db";
+import { requireAuth, AuthRequest } from "./auth";
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // 🔒 Получить корзину (только для авторизованных)
-router.get("/", requireAuth, async (req: Request, res: Response) => {
+router.get("/", requireAuth, async (req: AuthRequest, res: Response) => {
 	try {
-		const userId = (req as any).user.userId;
+		const userId = req.user!.id;
 
 		const cartItems = await prisma.cartItem.findMany({
 			where: { userId },
@@ -17,15 +16,20 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
 
 		res.json(cartItems);
 	} catch (error) {
+		console.error("Get cart error:", error);
 		res.status(500).json({ error: "Ошибка получения корзины" });
 	}
 });
 
 // 🔒 Добавить товар в корзину
-router.post("/add", requireAuth, async (req: Request, res: Response) => {
+router.post("/add", requireAuth, async (req: AuthRequest, res: Response) => {
 	try {
-		const userId = (req as any).user.userId;
+		const userId = req.user!.id;
 		const { productId, name, price, image } = req.body;
+
+		if (!productId || !name || !price) {
+			return res.status(400).json({ error: "Missing required fields" });
+		}
 
 		const existingItem = await prisma.cartItem.findUnique({
 			where: {
@@ -49,13 +53,14 @@ router.post("/add", requireAuth, async (req: Request, res: Response) => {
 				productId,
 				name,
 				price,
-				image,
+				image: image || null,
 				quantity: 1,
 			},
 		});
 
 		res.json(newItem);
 	} catch (error) {
+		console.error("Add to cart error:", error);
 		res.status(500).json({ error: "Ошибка добавления в корзину" });
 	}
 });
@@ -64,10 +69,10 @@ router.post("/add", requireAuth, async (req: Request, res: Response) => {
 router.delete(
 	"/remove/:productId",
 	requireAuth,
-	async (req: Request, res: Response) => {
+	async (req: AuthRequest, res: Response) => {
 		try {
-			const userId = (req as any).user.userId;
-			const productId = parseInt(req.params.productId);
+			const userId = req.user!.id;
+			const productId = req.params.productId;
 
 			await prisma.cartItem.delete({
 				where: {
@@ -77,24 +82,30 @@ router.delete(
 
 			res.json({ message: "Товар удалён из корзины" });
 		} catch (error) {
+			console.error("Remove from cart error:", error);
 			res.status(500).json({ error: "Ошибка удаления из корзины" });
 		}
 	},
 );
 
 // 🔒 Очистить корзину
-router.delete("/clear", requireAuth, async (req: Request, res: Response) => {
-	try {
-		const userId = (req as any).user.userId;
+router.delete(
+	"/clear",
+	requireAuth,
+	async (req: AuthRequest, res: Response) => {
+		try {
+			const userId = req.user!.id;
 
-		await prisma.cartItem.deleteMany({
-			where: { userId },
-		});
+			await prisma.cartItem.deleteMany({
+				where: { userId },
+			});
 
-		res.json({ message: "Корзина очищена" });
-	} catch (error) {
-		res.status(500).json({ error: "Ошибка очистки корзины" });
-	}
-});
+			res.json({ message: "Корзина очищена" });
+		} catch (error) {
+			console.error("Clear cart error:", error);
+			res.status(500).json({ error: "Ошибка очистки корзины" });
+		}
+	},
+);
 
 export default router;

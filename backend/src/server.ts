@@ -1,18 +1,11 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-<<<<<<< HEAD
+import dotenv from "dotenv"; 
 dotenv.config();
 // import { pool } from "./db";
 
-=======
-import path from "path"; // 1. Импортируем path
->>>>>>> origin/feature-my-code
 import authRouter from "./api/auth";
 import cartRoutes from "./api/cart";
-
-// 2. Явно указываем путь к .env (выходим из src в корень)
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
 const PORT = process.env.PORT || 3000;

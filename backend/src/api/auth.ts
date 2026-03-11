@@ -1,21 +1,28 @@
-import express, { Request, Response } from "express";
+import { Router, Request, Response } from "express"; // <- ИСПРАВЛЕНО
 import jwt from "jsonwebtoken";
-import { hashPass, comparePass } from "../utils/hashPass"; // <--- ВАЖНО: добавьте comparePass
+import { hashPass, comparePass } from "../utils/hashPass";
 import prisma from "../db";
 
+// Добавляем интерфейс для расширения Request
+export interface AuthRequest extends Request {
+  user?: {
+    userId: number;
+    email: string;
+  };
+}
+
 interface RegisterBody {
-	username: string;
-	email: string;
-	password: string;
+  username: string;
+  email: string;
+  password: string;
 }
 
-// Интерфейс для входа (нужны только email и пароль)
 interface LoginBody {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 }
 
-const router = express.Router();
+const router = Router();
 
 // --- РЕАЛИЗАЦИЯ ВХОДА (LOGIN) ---
 router.post(
@@ -141,4 +148,35 @@ router.post(
 	},
 );
 
+export const requireAuth = (req: AuthRequest, res: Response, next: any) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const token = authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Invalid token format' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret') as {
+      id: number;
+      email: string;
+    };
+
+    req.user = {
+      userId: decoded.id,
+      email: decoded.email
+    };
+
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
+
 export default router;
+

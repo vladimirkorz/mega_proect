@@ -1,8 +1,7 @@
 // backend/src/api/cart.ts
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "../generated/prisma";
-import { requireAuth } from "../utils/auth"; // Ваш middleware авторизации
-
+import { requireAuth } from "./auth"; // Ваш middleware авторизации
 const router = Router();
 const prisma = new PrismaClient();
 
@@ -60,26 +59,30 @@ router.post("/add", requireAuth, async (req: Request, res: Response) => {
 	}
 });
 
-// 🔒 Удалить товар из корзины
 router.delete(
-	"/remove/:productId",
-	requireAuth,
-	async (req: Request, res: Response) => {
-		try {
-			const userId = (req as any).user.userId;
-			const productId = parseInt(req.params.productId);
+  "/remove/:productId",
+  requireAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user.userId;
+      const productId = parseInt(req.params.productId as string); // Добавьте as string
+      
+      // Проверка на валидность числа
+      if (isNaN(productId)) {
+        return res.status(400).json({ error: "Invalid product ID" });
+      }
 
-			await prisma.cartItem.delete({
-				where: {
-					userId_productId: { userId, productId },
-				},
-			});
+      await prisma.cartItem.delete({
+        where: {
+          userId_productId: { userId, productId },
+        },
+      });
 
-			res.json({ message: "Товар удалён из корзины" });
-		} catch (error) {
-			res.status(500).json({ error: "Ошибка удаления из корзины" });
-		}
-	},
+      res.json({ message: "Товар удалён из корзины" });
+    } catch (error) {
+      res.status(500).json({ error: "Ошибка удаления из корзины" });
+    }
+  },
 );
 
 // 🔒 Очистить корзину

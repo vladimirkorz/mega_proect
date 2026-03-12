@@ -1,11 +1,8 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv"; 
-dotenv.config();
-// import { pool } from "./db";
-
 import authRouter from "./api/auth";
 import cartRoutes from "./api/cart";
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;

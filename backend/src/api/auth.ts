@@ -1,17 +1,29 @@
-import express, { Request, Response } from "express";
+import { Router, Request, Response } from "express"; // <- ИСПРАВЛЕНО
 import jwt from "jsonwebtoken";
-import { hashPass } from "../utils/hashPass";
+import { hashPass, comparePass } from "../utils/hashPass";
 import prisma from "../db";
 import { NextFunction } from "express";
 
-// Делаем поля обязательными, так как они нужны для регистрации
-interface RegisterBody {
-	username: string;
-	email: string;
-	password: string;
+// Добавляем интерфейс для расширения Request
+export interface AuthRequest extends Request {
+  user?: {
+    userId: number;
+    email: string;
+  };
 }
 
-const router = express.Router();
+interface RegisterBody {
+  username: string;
+  email: string;
+  password: string;
+}
+
+interface LoginBody {
+  email: string;
+  password: string;
+}
+
+const router = Router();
 
 // Заглушки для login/logout (требуют отдельной реализации)
 router.post("/login", async (req: Request, res: Response) => {
@@ -87,39 +99,35 @@ router.post(
 	},
 );
 
-export interface AuthRequest extends Request {
-	user?: {
-		id: number;
-		email: string;
-	};
-}
+export const requireAuth = (req: AuthRequest, res: Response, next: any) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
 
-export function requireAuth(
-	req: AuthRequest,
-	res: Response,
-	next: NextFunction,
-) {
-	const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Invalid token format' });
+    }
 
-	if (!authHeader || !authHeader.startsWith("Bearer ")) {
-		return res.status(401).json({ error: "No token provided" });
-	}
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret') as {
+      id: number;
+      email: string;
+    };
 
-	const token = authHeader.substring(7); // Убираем "Bearer "
+    req.user = {
+      userId: decoded.id,
+      email: decoded.email
+    };
 
-	try {
-		const decoded = jwt.verify(
-			token,
-			process.env.JWT_SECRET || "fallback_secret",
-		) as {
-			id: number;
-			email: string;
-		};
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
 
-		req.user = decoded;
-		next();
-	} catch (error) {
-		return res.status(401).json({ error: "Invalid token" });
-	}
-}
 export default router;
+

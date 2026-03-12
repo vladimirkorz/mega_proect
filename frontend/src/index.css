@@ -11,7 +11,7 @@
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	margin-left: 40%;
+	/* Убираем margin-left: 40% */
 }
 
 a {
@@ -25,20 +25,26 @@ a:hover {
 
 body {
 	margin: 0;
-	max-width: 360px;
-	min-width: 360px;
-	height: 100vh;
+	padding: 0;
+	/* Убираем фиксированные размеры из body */
 	background-color: #242424;
+	display: flex;
+	justify-content: center; /* Центрируем содержимое */
 }
 
-h1 {
-	font-size: 3.2em;
-	line-height: 1.1;
+#root {
+	max-width: 360px;
+	width: 100%;
+	min-height: 100vh;
+	background-color: #dadada; /* Ваш фоновый цвет */
+	margin: 0 auto;
+	position: relative;
+	padding-top: 100px; /* Отступ под шапку */
 }
 
+/* Стили для кнопок - переопределяем */
 button {
 	height: 30px;
-	width: 100%;
 	border-radius: 20px;
 	border: 1px solid transparent;
 	padding-left: 8px;
@@ -49,14 +55,12 @@ button {
 	font-size: 11px;
 	margin-bottom: 10px;
 	margin-top: 10px;
+	/* Убираем width: 100% отсюда, пусть каждый компонент сам задает ширину */
 }
+
 button:hover {
 	border-color: #adadad;
 	background-color: rgb(199, 199, 199);
-}
-button:focus,
-button:focus-visible {
-	outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

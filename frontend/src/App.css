@@ -1,5 +1,12 @@
+/* Добавьте в начало App.css */
 * {
 	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	height: 100%;
 	margin: 0;
 	padding: 0;
 }
@@ -9,17 +16,57 @@ body {
 		-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
 	line-height: 1.6;
 	color: #333;
-	background-color: #d4d4d4;
-	padding: 5px;
-	padding-top: 100px;
-	height: 100%;
+	min-height: 100vh;
+	background-color: #242424;
+	display: flex;
+	justify-content: center;
 }
 
-.Login > body {
-	height: 100%;
-	background-color: #ffffff;
+#root {
+	max-width: 360px;
+	width: 100%;
+	background-color: #dadada;
+	min-height: 100vh;
+	position: relative;
+	padding: 100px 5px 0 5px; /* Изменено: добавили отступы по бокам */
+	margin: 0 auto;
 }
 
+/* Фиксированная шапка - корректируем отступы */
+.Baza {
+	position: fixed;
+	top: 0;
+	width: calc(100% - 10px); /* Учитываем отступы по бокам */
+	max-width: 350px; /* 360px - 10px */
+	background-color: #dadada;
+	z-index: 1000;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 0 5px;
+}
+
+/* Контейнер для контента - теперь не нужен, так как отступы уже в #root */
+.content {
+	width: 100%;
+}
+
+/* Страница логина */
+.login-page {
+	max-width: 360px;
+	width: 100%;
+	margin: 0 auto;
+	background-color: #ebe3e3;
+	min-height: 100vh;
+	padding: 100px 5px 0 5px;
+}
+
+.login-page .Baza {
+	background-color: #ebe3e3;
+	width: calc(100% - 10px);
+	max-width: 350px;
+}
+
+/* Остальные ваши стили */
 .login-input {
 	background-color: #c5c5c5;
 	width: 100%;
@@ -51,7 +98,7 @@ body {
 }
 
 .dropdown-content {
-	display: none; /* Скрыто по умолчанию */
+	display: none;
 	position: absolute;
 	background-color: #e9e9e9;
 	border-radius: 10px;
@@ -60,18 +107,19 @@ body {
 }
 
 .dropdown-content.show {
-	display: block; /* Показывается при добавлении класса */
+	display: block;
 }
 
 .Search {
 	width: 100%;
 	height: 39px;
-	background-color: bisque;
+	background-color: rgb(204, 204, 204);
 	border-radius: 20px;
 }
 
 .PromotionalBanner {
-	width: 350px;
+	width: 100%; /* Изменено с 350px на 100% */
+	max-width: 350px;
 	height: 140px;
 	background-color: #333;
 	color: black;
@@ -84,25 +132,24 @@ body {
 
 .CategoryCards {
 	display: flex;
-	overflow-x: min;
+	overflow-x: auto;
 	height: 100px;
-	background-color: rgb(187, 187, 187);
+	background-color: rgb(219, 219, 219);
+	gap: 5px;
+	width: 100%;
 }
 
 .Card {
 	max-height: 80px;
 	min-width: 66px;
 	background-color: #7c7c7c;
-	margin-right: 5px;
 	font-size: 11px;
 }
 
 .Card > img {
-	min-width: 66px;
-	min-height: 66px;
+	width: 66px;
+	height: 66px;
 	background-color: #333;
-	max-width: 66px;
-	max-height: 66px;
 }
 
 .Goods {
@@ -111,30 +158,28 @@ body {
 	grid-template-columns: 169px 169px;
 }
 
-.Goods > product-card {
-	width: 169px;
-	height: 292px;
-	background-color: rgb(204, 204, 204);
+.product-card {
+	width: 100%; /* Изменено с 169px на 100% */
+	max-width: 169px;
+	height: 330px;
+	background-color: rgb(163, 163, 163);
 	border-radius: 20px;
+	padding: 5px;
 }
 
 .product-card > img {
-	max-width: 184px;
-	max-height: 184px;
+	width: 100%;
+	max-width: 159px;
+	height: 184px;
 	border-radius: 20px;
+	object-fit: cover;
 }
 
 .product-card > button {
-	width: 160px;
-	margin-left: 5px;
-}
-
-.Baza {
-	position: fixed;
-	top: 0;
 	width: 100%;
-	max-width: 350px;
-	background-color: #f5f5f5;
+	max-width: 149px;
+	margin: 5px auto 0 auto;
+	display: block;
 }
 
 .cart-item > img {
@@ -146,12 +191,13 @@ body {
 
 .cart-item {
 	max-width: 170px;
-	background-color: #7c7c7c;
+	background-color: #cacaca;
 	border-radius: 20px;
 }
 
 .cart-item button {
 	margin-left: 7px;
 	margin-right: 7px;
+	width: calc(100% - 14px);
 	max-width: 156px;
 }

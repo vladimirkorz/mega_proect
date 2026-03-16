@@ -1,10 +1,23 @@
 // backend/src/api/cart.ts
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "../generated/prisma";
-import { requireAuth } from "./auth"; // Ваш middleware авторизации
+import { requireAuth } from "./auth";
+
+// 🔹 1. Создаём экземпляр Prisma (или импортируйте из отдельного файла)
+const prisma = new PrismaClient();
+
+// 🔹 2. Определяем тип AuthRequest (если нет в auth.ts)
+export interface AuthRequest extends Request {
+	user?: {
+		id: number; // или string, в зависимости от вашей БД
+		email?: string;
+		[key: string]: any;
+	};
+}
+
 const router = Router();
 
-// 🔒 Получить корзину (только для авторизованных)
+// 🔒 Получить корзину
 router.get("/", requireAuth, async (req: AuthRequest, res: Response) => {
 	try {
 		const userId = req.user!.id;
@@ -37,7 +50,6 @@ router.post("/add", requireAuth, async (req: AuthRequest, res: Response) => {
 		});
 
 		if (existingItem) {
-			// Увеличиваем количество
 			const updatedItem = await prisma.cartItem.update({
 				where: { id: existingItem.id },
 				data: { quantity: existingItem.quantity + 1 },
@@ -45,7 +57,6 @@ router.post("/add", requireAuth, async (req: AuthRequest, res: Response) => {
 			return res.json(updatedItem);
 		}
 
-		// Создаём новый товар в корзине
 		const newItem = await prisma.cartItem.create({
 			data: {
 				userId,
@@ -64,30 +75,37 @@ router.post("/add", requireAuth, async (req: AuthRequest, res: Response) => {
 	}
 });
 
+// 🔒 Удалить товар из корзины
 router.delete(
-  "/remove/:productId",
-  requireAuth,
-  async (req: Request, res: Response) => {
-    try {
-      const userId = (req as any).user.userId;
-      const productId = parseInt(req.params.productId as string); // Добавьте as string
-      
-      // Проверка на валидность числа
-      if (isNaN(productId)) {
-        return res.status(400).json({ error: "Invalid product ID" });
-      }
+	"/remove/:productId",
+	requireAuth,
+	async (req: AuthRequest, res: Response) => {
+		try {
+			const userId = req.user!.id;
+			// Превращаем параметр из URL в число для проверки
+			const productIdNum = parseInt(req.params.productId as string);
 
-      await prisma.cartItem.delete({
-        where: {
-          userId_productId: { userId, productId },
-        },
-      });
+			if (isNaN(productIdNum)) {
+				return res.status(400).json({ error: "Invalid product ID" });
+			}
 
-      res.json({ message: "Товар удалён из корзины" });
-    } catch (error) {
-      res.status(500).json({ error: "Ошибка удаления из корзины" });
-    }
-  },
+			await prisma.cartItem.delete({
+				where: {
+					// 🔹 ИСПРАВЛЕНИЕ: Преобразуем число обратно в строку для Prisma
+					userId_productId: {
+						userId,
+						productId: productIdNum.toString(),
+					},
+				},
+			});
+
+			res.json({ message: "Товар удалён из корзины" });
+			// ...
+		} catch (error) {
+			console.error("Remove from cart error:", error);
+			res.status(500).json({ error: "Ошибка удаления из корзины" });
+		}
+	},
 );
 
 // 🔒 Очистить корзину

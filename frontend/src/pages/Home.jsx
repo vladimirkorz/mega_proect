@@ -1,38 +1,59 @@
+// frontend/src/pages/Home.jsx
 import { useState, useEffect } from "react";
-import { useCart } from "../context/CartContext.jsx";
+import { api } from "../api/axios";
+import { useCart } from "../context/CartContext";
+import NavigationBar from "../components/NavigationBar";
+import CategoryCards from "../components/CategoryCards";
+import MenuNavigator from "../components/MenuNavigator";
+import PromotionalBanner from "../components/PromotionalBanner";
+import Search from "../components/Search";
+import StatusBar from "../components/StatusBar";
+import Goods from "../components/Goods/Goods"; 
 
-// Импорт компонентов
-import StatusBar from "../components/StatusBar.jsx";
-import NavigationBar from "../components/NavigationBar.jsx";
-import Search from "../components/Search.jsx";
-import PromotionalBanner from "../components/PromotionalBanner.jsx";
-import CategoryCards from "../components/CategoryCards.jsx";
-import Goods from "../components/Goods/Goods.jsx"; // 👈 Обрати на путь
-
-export default function Home() {
-	const { addToCart } = useCart(); // 👈 Хук работает, т.к. App обернут в CartProvider
-	const [isReady, setIsReady] = useState(false);
+function Home() {
+	const [products, setProducts] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const { addToCart } = useCart();
 
 	useEffect(() => {
-		// Здесь можно загрузить товары с бэкенда
-		setIsReady(true);
+		loadProducts();
 	}, []);
 
-	if (!isReady) return <div>Загрузка...</div>;
+	const loadProducts = async () => {
+		try {
+			const response = await api.get("/admin/products");
+			setProducts(response.data);
+		} catch (err) {
+			console.error("Failed to load products:", err);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	if (loading) return <div>Загрузка...</div>;
 
 	return (
-		<>
-			<div className="Baza">
-				<StatusBar />
-				<NavigationBar />
-				<Search />
-			</div>
-			<div className="App">
-				<PromotionalBanner />
-				<CategoryCards />
-				{/* 👇 Передаём функцию добавления в Goods */}
-				<Goods onAddToCart={addToCart} />
-			</div>
-		</>
+		<div className="home">
+			<StatusBar />
+			<NavigationBar />
+			<Search />
+			<PromotionalBanner />
+			<CategoryCards />
+			
+			
+			<Goods 
+				goods={products.map(p => ({
+					id: p.id,
+					name: p.title,
+					description: p.content,
+					price: p.price,
+					image: p.image,
+					stock: p.stock
+				}))} 
+				onAddToCart={addToCart}
+			/>
+		</div>
 	);
 }
+
+export default Home;

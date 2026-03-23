@@ -3,13 +3,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";
-import { useAuth } from "../context/AuthContext.jsx"; // 👈 Импортируем useAuth
+import { useAuth } from "../context/AuthContext.jsx";
 
 function NavigationBar() {
 	const [isOpen, setIsOpen] = useState(false);
 	const navigate = useNavigate();
 	const { cartCount } = useCart();
-	const { user, logout } = useAuth(); // 👈 Получаем user и logout из контекста
+	const { user, logout } = useAuth();
+
+	console.log("=== NavigationBar Debug ===");
+	console.log("Current user:", user);
+	console.log("User role:", user?.role);
 
 	// Обработчик клика по "войти"
 	const handleLoginClick = () => {
@@ -17,11 +21,17 @@ function NavigationBar() {
 		navigate("/login");
 	};
 
-	// 👇 Обработчик клика по "выйти"
+	// Обработчик клика по "выйти"
 	const handleLogoutClick = () => {
-		logout(); // Очищаем токен и user из localStorage/контекста
-		setIsOpen(false); // Закрываем меню
-		navigate("/"); // 👈 Опционально: перенаправляем на главную
+		logout();
+		setIsOpen(false);
+		navigate("/");
+	};
+
+	// 👇 Обработчик клика по админ-панели
+	const handleAdminClick = () => {
+		setIsOpen(false);
+		navigate("/admin");
 	};
 
 	return (
@@ -44,24 +54,39 @@ function NavigationBar() {
 					id="dropdownContent"
 					className={`dropdown-content ${isOpen ? "show" : ""}`}
 				>
-					{/* 👇 Условный рендеринг: вход / выход */}
-					{user ? (
-						<>
-							{/* Показываем имя пользователя (опционально) */}
-							<span className="user-greeting">
-								{user.email || user.name || "Пользователь"}
-							</span>
+					{/* Показываем email пользователя, если авторизован */}
+					{user && (
+						<span className="user-greeting" style={{ 
+							padding: "8px", 
+							fontSize: "12px", 
+							color: "#666",
+							borderBottom: "1px solid #eee",
+							display: "block"
+						}}>
+							{user.email}
+						</span>
+					)}
 
-							{/* Кнопка выхода */}
-							<button
-								onClick={handleLogoutClick}
-								className="btn-logout"
-							>
-								Выйти
-							</button>
-						</>
+					{/* 👇 Кнопка админ-панели (только для админов) */}
+					{user?.role === "admin" && (
+						<button 
+							onClick={handleAdminClick}
+							className="btn-admin"
+							style={{
+								backgroundColor: "#4CAF50",
+								color: "white"
+							}}
+						>
+							👑 Админ-панель
+						</button>
+					)}
+
+					{/* Кнопка входа/выхода */}
+					{user ? (
+						<button onClick={handleLogoutClick} className="btn-logout">
+							Выйти
+						</button>
 					) : (
-						/* Кнопка входа для гостей */
 						<button onClick={handleLoginClick}>Войти</button>
 					)}
 

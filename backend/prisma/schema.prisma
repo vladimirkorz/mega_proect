@@ -1,9 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// backend/prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -15,23 +10,25 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  username String   @unique
-  email    String   @unique
-  password String
-  createAt DateTime @default(now())
-  posts    Post[]
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  posts     Post[]
+  cartItems CartItem[]
 }
 
 model Post {
-  id      Int     @id @default(autoincrement())
-  title   String
-  content String?
-
-  // Поле для хранения ID автора
-  authorId Int
-  // Описание связи: поле authorId ссылается на id в модели User
-  author   User @relation(fields: [authorId], references: [id])
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  price     Float   @default(0) 
+  image     String?   
+  stock     Int     @default(0)
+  authorId  Int
+  author    User    @relation(fields: [authorId], references: [id])
 }
 
 model CartItem {
@@ -42,9 +39,10 @@ model CartItem {
   price     Float
   image     String?
   quantity  Int      @default(1)
-  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  user      User     @relation(fields: [userId], references: [id])
+  
   @@unique([userId, productId])
 }
